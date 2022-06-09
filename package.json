@@ -1,0 +1,10 @@
+{
+  "name": "com.studiomanette.utils",
+  "displayName": "Studio Manette utilities",
+  "version": "1.0.0",
+  "unity": "2020.3",
+  "description": "Studio Manette utilities : various useful code snippets",
+  "dependencies": {
+  },
+  "publishConfig": { "registry": "https://npm.pkg.github.com/@Studio-Manette" }
+}
