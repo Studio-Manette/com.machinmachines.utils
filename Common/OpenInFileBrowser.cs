@@ -8,7 +8,7 @@ namespace StudioManette
     {
         // Stolen from Unity Recorder, which itself mentions:
         // Inspired from http://wiki.unity3d.com/index.php/OpenInFileBrowser
-        static class OpenInFileBrowser
+        public static class OpenInFileBrowser
         {
             static void OpenInOSX(string path, bool openInsideFolder)
             {
