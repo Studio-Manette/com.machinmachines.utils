@@ -19,13 +19,13 @@ namespace StudioManette
                 }
 
                 // Apply the input PRS data to the given transform
-                public static void FromBlenderToUnityEulerAngles(
+                public static void FromBlenderToUnity(
                     this Transform existingTransform,
                     Vector3 blenderPosition,
                     Vector3 blenderRotation,
                     Vector3 blenderScale)
                 {
-                    existingTransform.localPosition = blenderPosition;
+                    existingTransform.localPosition = blenderPosition.FromBlenderToUnity();
                     if (true)//master.rotation.eulerAngles != rot)
                     {
                         Vector3 convertedRot = -1.0f * blenderRotation.FromBlenderToUnity();
