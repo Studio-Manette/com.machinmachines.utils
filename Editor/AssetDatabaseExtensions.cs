@@ -18,8 +18,7 @@ namespace StudioManette
                 List<string> result = new List<string>();
                 if (File.GetAttributes(root).HasFlag(FileAttributes.Directory))
                 {
-                    EnumerationOptions options = new EnumerationOptions();
-                    options.RecurseSubdirectories = true;
+                    SearchOption options = SearchOption.AllDirectories;
                     string searchPattern = string.IsNullOrEmpty(extension) ? "*.*" : $"*{extension}";
                     result.AddRange(Directory.GetFiles(root, searchPattern, options));
                 }
