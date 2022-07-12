@@ -29,8 +29,7 @@ namespace StudioManette
                 float[] result = new float[values.Length];
                 for (int i = 0; i < values.Length; ++i)
                 {
-                    string currentStr = values[i];
-                    float current = float.Parse(currentStr, NumberStyles.Float, CultureInfo.InvariantCulture);
+                    float current = float.Parse(values[i], NumberStyles.Float, CultureInfo.InvariantCulture);
                     result[i] = current;
                 }
                 return result;
