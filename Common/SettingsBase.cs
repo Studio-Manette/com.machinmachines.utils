@@ -66,7 +66,7 @@ namespace StudioManette
                                 {
                                     // Make sure the drive exists before trying to create it
                                     string pathRoot = Path.GetPathRoot(propertyValue);
-                                    if (Directory.Exists(pathRoot))
+                                    if (string.IsNullOrEmpty(pathRoot) || Directory.Exists(pathRoot))
                                     {
                                         Directory.CreateDirectory(propertyValue);
                                     }
