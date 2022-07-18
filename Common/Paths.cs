@@ -8,6 +8,13 @@ namespace StudioManette
         // Named "Paths" so there is no collision with System.IO.Path
         public static class Paths
         {
+            public static bool PathsAreEquivalent(string lhs, string rhs)
+            {
+                string pathLHS = Path.GetFullPath(lhs);
+                string pathRHS = Path.GetFullPath(rhs);
+                return string.Equals(pathLHS, pathRHS, StringComparison.OrdinalIgnoreCase);
+            }
+
             // From the given string input, retrieve a string suitable for a file name
             // For instance this string: Toto"a>b<c
             // will yield: Toto_a_b_c
