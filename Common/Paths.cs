@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace StudioManette
@@ -8,11 +9,40 @@ namespace StudioManette
         // Named "Paths" so there is no collision with System.IO.Path
         public static class Paths
         {
+            public class PathComparer : IEqualityComparer<string>
+            {
+                public bool Equals(string lhs, string rhs)
+                {
+                    // Check whether the objects are the same object.
+                    if (lhs.Equals(rhs))
+                    {
+                        return true;
+                    }
+                    return NormalisePath(lhs).Equals(NormalisePath(rhs));
+                }
+
+                public int GetHashCode(string obj)
+                {
+                    return NormalisePath(obj).GetHashCode();
+                }
+            }
+
+            public static string NormalisePath(string value)
+            {
+                return value.Replace('\\', '/');
+            }
+
+            // Equivalent of string.pathStartsWith suitable for paths
+            public static bool PathStartsWith(this string lhs, string rhs)
+            {
+                return NormalisePath(lhs).StartsWith(NormalisePath(rhs), StringComparison.OrdinalIgnoreCase);
+            }
+
+            // Equivalent of string.Equals() suitable for paths
             public static bool PathsAreEquivalent(string lhs, string rhs)
             {
-                string pathLHS = Path.GetFullPath(lhs);
-                string pathRHS = Path.GetFullPath(rhs);
-                return string.Equals(pathLHS, pathRHS, StringComparison.OrdinalIgnoreCase);
+                PathComparer cmp = new PathComparer();
+                return cmp.Equals(lhs, rhs);
             }
 
             // From the given string input, retrieve a string suitable for a file name
