@@ -1,4 +1,7 @@
+using System;
 using System.Globalization;
+
+using UnityEngine.Profiling;
 
 namespace StudioManette
 {
@@ -26,12 +29,39 @@ namespace StudioManette
             // Parse all given string values into floats
             public static float[] ParseFloatVector(string[] values)
             {
+                Profiler.BeginSample("utilities - ParseFloatVector");
                 float[] result = new float[values.Length];
                 for (int i = 0; i < values.Length; ++i)
                 {
                     float current = float.Parse(values[i], NumberStyles.Float, CultureInfo.InvariantCulture);
                     result[i] = current;
                 }
+                Profiler.EndSample();
+                return result;
+            }
+
+            public static float[] ParseFloatVector(ReadOnlySpan<char> values, ReadOnlySpan<char> separators, int expectedValuesCount)
+            {
+                Profiler.BeginSample("utilities - ParseFloatVector - Span");
+
+                float[] result = new float[expectedValuesCount];
+                int i = 0;
+
+                int currentIndex = 0;
+                int sliceLength = values.IndexOfAny(separators);
+                while (sliceLength > 0)
+                {
+                    ReadOnlySpan<char> slice = values.Slice(currentIndex, sliceLength);
+                    result[i] = float.Parse(slice, NumberStyles.Float, CultureInfo.InvariantCulture);
+                    i += 1;
+                    currentIndex += sliceLength + 1;
+                    sliceLength = values.Slice(currentIndex).IndexOfAny(separators);
+                }
+                // Last term
+                ReadOnlySpan<char> lastSlice = values.Slice(currentIndex, values.Length - currentIndex);
+                result[result.Length - 1] = float.Parse(lastSlice, NumberStyles.Float, CultureInfo.InvariantCulture);
+
+                Profiler.EndSample();
                 return result;
             }
         }
