@@ -66,9 +66,29 @@ namespace StudioManette
                                 {
                                     // Make sure the drive exists before trying to create it
                                     string pathRoot = Path.GetPathRoot(propertyValue);
+                                    if(string.IsNullOrEmpty(pathRoot))
+                                    {
+                                        if (propertyValue.StartsWith("Assets", System.StringComparison.InvariantCultureIgnoreCase))
+                                        {
+                                            // If we are trying to create some "assets/***" subfolder within a runtime build, just stop
+                                            if (!Application.isEditor)
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                    }
                                     if (string.IsNullOrEmpty(pathRoot) || Directory.Exists(pathRoot))
                                     {
-                                        Directory.CreateDirectory(propertyValue);
+                                        // This might fail for various reasons (typically access rights),
+                                        // so better make sure we catch the potential exception
+                                        try
+                                        {
+                                            Directory.CreateDirectory(propertyValue);
+                                        }
+                                        catch
+                                        {
+                                            Debug.LogWarning($"No access rights to create folder {propertyValue}");
+                                        }
                                     }
                                 }
                             }
