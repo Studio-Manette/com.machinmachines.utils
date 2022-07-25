@@ -40,6 +40,7 @@ namespace StudioManette
                 return result;
             }
 
+#if NET_STANDARD_2_1
             public static float[] ParseFloatVector(ReadOnlySpan<char> values, ReadOnlySpan<char> separators, int expectedValuesCount)
             {
                 Profiler.BeginSample("utilities - ParseFloatVector - Span");
@@ -64,6 +65,7 @@ namespace StudioManette
                 Profiler.EndSample();
                 return result;
             }
+#endif  // NET_STANDARD_2_1
         }
     }
 }
