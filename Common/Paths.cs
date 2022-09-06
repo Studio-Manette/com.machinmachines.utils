@@ -98,6 +98,29 @@ namespace StudioManette
 
                 return relativePath;
             }
+
+            // Inspired from TextMesh Pro similar function
+            public static string GetPackageRelativePath(string packageFullName)
+            {
+                // Check for potential UPM package
+                string packagePath = Path.GetFullPath($"Packages/{packageFullName}");
+                if (Directory.Exists(packagePath))
+                {
+                    return packagePath;
+                }
+
+                packagePath = Path.GetFullPath("Assets/..");
+                if (Directory.Exists(packagePath))
+                {
+                    // Search default location for development package
+                    if (Directory.Exists($"{packagePath}/Assets/Packages/{packageFullName}"))
+                    {
+                        return "Assets/Packages/com.studiomanette.Bob";
+                    }
+                }
+
+                return null;
+            }
         }
     }
 }
