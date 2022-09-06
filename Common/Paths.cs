@@ -115,7 +115,7 @@ namespace StudioManette
                     // Search default location for development package
                     if (Directory.Exists($"{packagePath}/Assets/Packages/{packageFullName}"))
                     {
-                        return "Assets/Packages/com.studiomanette.Bob";
+                        return $"Assets/Packages/{packageFullName}";
                     }
                 }
 
