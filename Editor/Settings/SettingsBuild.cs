@@ -3,7 +3,8 @@ using System.IO;
 
 using UnityEngine;
 
-using UnityEditor;
+using UnityEditor.Build;
+using UnityEditor.Build.Reporting;
 
 namespace StudioManette
 {
@@ -22,11 +23,12 @@ namespace StudioManette
                 };
             }
 
-            // Autolaunched method to make sure settings files are copied to StreamingAssets/
-            public class SettingsPreBuild
+            // Prebuild step to make sure default assets are copied to StreamingAssets/
+            public class SettingsPreBuild : IPreprocessBuildWithReport
             {
-                [InitializeOnLoadMethod]
-                static void AutoloadPresets()
+                public int callbackOrder { get { return 0; } }
+
+                void IPreprocessBuildWithReport.OnPreprocessBuild(BuildReport report)
                 {
                     try
                     {
@@ -46,7 +48,31 @@ namespace StudioManette
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError($"Something went wrong when copying settings files: {e.Message}");
+                        Debug.LogError($"Something went wrong when copying settings paths: {e.Message}");
+                    }
+                }
+            }
+
+            // Postbuild step to make sure StreamingAssets is being emptied
+            public class SettingsPostBuild : IPostprocessBuildWithReport
+            {
+                public int callbackOrder { get { return 0; } }
+
+                void IPostprocessBuildWithReport.OnPostprocessBuild(BuildReport report)
+                {
+                    try
+                    {
+                        foreach ((string _, string runtimePath) in SettingsPaths.s_Paths)
+                        {
+                            if (File.Exists(runtimePath))
+                            {
+                                File.Delete(runtimePath);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"Something went wrong when deleting StreamingAssets directory after the build: {e.Message}");
                     }
                 }
             }
