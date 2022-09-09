@@ -18,14 +18,14 @@ namespace StudioManette
             {
                 // All settings are stored in the same folder, with the file named after their class
                 // In editor we read the local folder, at runtime it's in StreamingAssets
-                public static readonly string kEditorSettingsPath = Path.Combine(Paths.GetPackageRelativePath("com.studiomanette.utils"),
-                                                                                 "Assets",
-                                                                                 "ManetteSettings",
-                                                                                 $"{typeof(T).Name}.json");
                 public static readonly string kRuntimeSettingsPath = Path.Combine(Application.streamingAssetsPath,
                                                                                  "ManetteSettings",
                                                                                  $"{typeof(T).Name}.json");
 #if UNITY_EDITOR
+                public static readonly string kEditorSettingsPath = Path.Combine(Paths.GetPackageRelativePath("com.studiomanette.utils"),
+                                                                                 "Assets",
+                                                                                 "ManetteSettings",
+                                                                                 $"{typeof(T).Name}.json");
                 public static readonly string kSettingsPath = kEditorSettingsPath;
 #else
             public static readonly string kSettingsPath = kRuntimeSettingsPath;

@@ -99,7 +99,9 @@ namespace StudioManette
                 return relativePath;
             }
 
+#if UNITY_EDITOR
             // Inspired from TextMesh Pro similar function
+            // No runtime version!
             public static string GetPackageRelativePath(string packageFullName)
             {
                 // Check for potential UPM package
@@ -121,6 +123,7 @@ namespace StudioManette
 
                 return null;
             }
+#endif  // UNITY_EDITOR
         }
     }
 }
