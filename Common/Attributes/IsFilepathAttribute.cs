@@ -11,7 +11,9 @@ namespace StudioManette
             public enum FileType
             {
                 File,
-                Directory
+                Directory,
+                // This allows to bypass the "fully qualified check" of settings, please use responsibly!
+                RootDirectory
             }
 
             public readonly bool IsReadOnly;

@@ -26,7 +26,7 @@ namespace StudioManette
 
                 [Header("SBX")]
 
-                [IsFilepath(false, "", IsFilepathAttribute.FileType.Directory)]
+                [IsFilepath(false, "", IsFilepathAttribute.FileType.RootDirectory)]
                 [Tooltip("Root folder for models")]
                 public string AssetsFolder = "X:/03_ASSETS";
 
