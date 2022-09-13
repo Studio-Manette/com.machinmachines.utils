@@ -103,6 +103,11 @@ namespace StudioManette
                                                 continue;
                                             }
                                         }
+                                        else
+                                        {
+                                            // We are trying to create some unrooted folder, just stop
+                                            continue;
+                                        }
                                     }
                                     if (string.IsNullOrEmpty(pathRoot) || Directory.Exists(pathRoot))
                                     {
