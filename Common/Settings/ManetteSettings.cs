@@ -43,8 +43,8 @@ namespace StudioManette
                 [Header("MBX presets")]
 
                 [IsFilepath(false, "", IsFilepathAttribute.FileType.Directory)]
-                [Tooltip("Root folder for MBX presets")]
-                public string MbxpFolder = "X:/03_ASSETS/07_TEXTURES/MBXP";
+                [Tooltip("Root folder for MBX presets, relative to the AssetsFolder")]
+                public string MbxpFolder = "07_TEXTURES/MBXP";
             }
         }
     }
