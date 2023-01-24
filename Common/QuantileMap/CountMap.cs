@@ -112,6 +112,8 @@ namespace MachinMachines.Quantile
                 int previousBucketIdx = (int)Math.Log(refCounter, 2.0);
                 int newBucketIdx = (int)Math.Log(refCounter + 1, 2.0);
                 foundBucketIdx = newBucketIdx;
+                // Need to clamp here as well in case we double the max count
+                previousBucketIdx = Math.Clamp(previousBucketIdx, kLowerBucketIndex, kHigherBucketIndex + 1);
                 if (previousBucketIdx != newBucketIdx)
                 {
                     // Transfer the content for this item into the next bucket
