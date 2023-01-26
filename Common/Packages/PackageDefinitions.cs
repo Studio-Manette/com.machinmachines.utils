@@ -188,10 +188,10 @@ namespace MachinMachines.Packages
             return result;
         }
 
-        public string Write<T>() where T : PackageDependencyHolder
         /// <summary>
         /// Custom serialisation to a JSON string
         /// </summary>
+        public string Write()
         {
             Profiler.BeginSample("MachinMachines - Package - Write");
 

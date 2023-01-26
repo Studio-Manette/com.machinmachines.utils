@@ -49,7 +49,7 @@ namespace MachinMachines.Packages
                         Manifest result = Manifest.Read<Manifest>(reader.ReadToEnd());
                         using (System.IO.StreamWriter writer = new(assetPath + "_roundtrip"))
                         {
-                            writer.Write(result.Write<Manifest>());
+                            writer.Write(result.Write());
                         }
                     }
                 }
