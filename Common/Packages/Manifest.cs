@@ -18,7 +18,7 @@ namespace MachinMachines.Packages
     /// An abstraction for packages manifest (e.g. manifest.json)
     /// </summary>
     [System.Serializable]
-    public class Manifest : PackageDependencyHolder
+    public class Manifest : PackageDependencies
     {
         // Not handling scoped registries yet: they will be lost during a roundtrip
 

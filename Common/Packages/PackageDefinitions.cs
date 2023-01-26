@@ -108,12 +108,12 @@ namespace MachinMachines.Packages
 
     /// <summary>
     /// Base class for scriptable objects with package dependencies field:
-    /// manifest.json, package.json
+    /// For instance manifest.json, package.json
     ///
     /// It handles serialising package dependencies within a regularly,
     /// JSON serialised scriptable object
     /// </summary>
-    public abstract class PackageDependencyHolder : ScriptableObject
+    public abstract class PackageDependencies : ScriptableObject
     {
         // Custom format: private, not automatically serialised
         private string _dependenciesStr;
@@ -145,7 +145,7 @@ namespace MachinMachines.Packages
         /// <summary>
         /// Custom serialisation from a JSON string
         /// </summary>
-        static public T Read<T>(string data) where T : PackageDependencyHolder
+        static public T Read<T>(string data) where T : PackageDependencies
         {
             Profiler.BeginSample("MachinMachines - Package - Read");
             T result = ScriptableObject.CreateInstance<T>();

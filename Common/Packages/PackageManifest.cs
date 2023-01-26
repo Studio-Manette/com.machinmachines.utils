@@ -21,7 +21,7 @@ namespace MachinMachines.Packages
     /// An additional field "additionalData" allows to store custom informations
     /// </summary>
     [System.Serializable]
-    public class PackageManifest : PackageDependencyHolder
+    public class PackageManifest : PackageDependencies
     {
         // Hiding the inherited member "name", hence this "new"
         new public string name;
