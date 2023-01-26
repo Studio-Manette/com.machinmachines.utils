@@ -116,7 +116,9 @@ namespace MachinMachines.Packages
     public abstract class PackageDependencyHolder : ScriptableObject
     {
         // Custom format: private, not automatically serialised
-        private string dependencies;
+        private string _dependenciesStr;
+        // Cache of the above
+        private PackageDependency[] _dependencies = null;
 
         /// <summary>
         /// All listed dependencies
@@ -125,11 +127,15 @@ namespace MachinMachines.Packages
         {
             get
             {
-                return PackageDependency.FromString(dependencies);
+                if (_dependencies == null)
+                {
+                    _dependencies = PackageDependency.FromString(_dependenciesStr);
+                }
+                return _dependencies;
             }
             set
             {
-                dependencies = PackageDependency.ToString(value);
+                _dependenciesStr = PackageDependency.ToString(value);
             }
         }
 
@@ -175,13 +181,17 @@ namespace MachinMachines.Packages
                 }
             }
             StringBuilder strBuilder = new StringBuilder();
-            for (int i = startLineIdx; i < endLineIdx; ++i)
+            for (int i = startLineIdx; i < endLineIdx - 1; ++i)
             {
                 strBuilder.AppendLine(lines[i]);
             }
+            // Strip potential trailing comma
+            strBuilder.AppendLine(lines[endLineIdx - 1].Trim(','));
+
             if (strBuilder.Length > 0)
             {
-                result.Dependencies = PackageDependency.FromString(strBuilder.ToString());
+                // This is considered as the only entry point for this field
+                result._dependenciesStr = strBuilder.ToString();
             }
 
             Profiler.EndSample();
@@ -196,9 +206,8 @@ namespace MachinMachines.Packages
             Profiler.BeginSample("MachinMachines - Package - Write");
 
             string packageStr = JsonUtility.ToJson(this, true);
-            // TODO string builder
-            string result = packageStr;
-            if (Dependencies.Length > 0)
+            string result;
+            if (!string.IsNullOrEmpty(_dependenciesStr))
             {
                 // Remove the last line after checking it
                 List<string> lines = packageStr.Split('\n').ToList();
@@ -222,10 +231,14 @@ namespace MachinMachines.Packages
                             lines[i - 1] += ',';
                         }
                         // This is where we can insert the dependencies data
-                        lines.Insert(i, PackageDependency.ToString(Dependencies));
+                        lines.Insert(i, _dependenciesStr);
                     }
                 }
                 result = string.Join('\n', lines);
+            }
+            else
+            {
+                result = packageStr;
             }
 
             Profiler.EndSample();
