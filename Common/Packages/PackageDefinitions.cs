@@ -186,7 +186,10 @@ namespace MachinMachines.Packages
                 strBuilder.AppendLine(lines[i]);
             }
             // Strip potential trailing comma
-            strBuilder.AppendLine(lines[endLineIdx - 1].Trim(','));
+            if (endLineIdx > 0)
+            {
+                strBuilder.AppendLine(lines[endLineIdx - 1].Trim(','));
+            }
 
             if (strBuilder.Length > 0)
             {

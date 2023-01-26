@@ -69,6 +69,26 @@ namespace MachinMachines.Packages
                 stream.Write(data.Write());
             }
         }
+
+        [UnityEditor.MenuItem("Assets/MachinMachines/packageManifestRoundtrip", priority = 1000)]
+        static void Roundtrip()
+        {
+            foreach (string guid in UnityEditor.Selection.assetGUIDs)
+            {
+                string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+                if (!string.IsNullOrEmpty(assetPath) && assetPath.EndsWith(".json"))
+                {
+                    using (System.IO.StreamReader reader = new(assetPath))
+                    {
+                        PackageManifest result = PackageManifest.Read<PackageManifest>(reader.ReadToEnd());
+                        using (System.IO.StreamWriter writer = new(assetPath + "_roundtrip"))
+                        {
+                            writer.Write(result.Write());
+                        }
+                    }
+                }
+            }
+        }
 #endif  // UNITY_EDITOR
     }
 }
