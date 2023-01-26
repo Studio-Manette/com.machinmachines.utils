@@ -12,13 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
-using UnityEngine;
 
 namespace MachinMachines.Packages
 {
@@ -41,6 +35,26 @@ namespace MachinMachines.Packages
             using (StreamWriter stream = new StreamWriter("Assets/manifest.json"))
             {
                 stream.Write(data.Write<Manifest>());
+            }
+        }
+
+        [UnityEditor.MenuItem("Assets/MachinMachines/manifestRoundtrip", priority = 1000)]
+        static void Roundtrip()
+        {
+            foreach (string guid in UnityEditor.Selection.assetGUIDs)
+            {
+                string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+                if (!string.IsNullOrEmpty(assetPath) && assetPath.EndsWith("manifest.json"))
+                {
+                    using (StreamReader reader = new(assetPath))
+                    {
+                        Manifest result = Manifest.Read<Manifest>(reader.ReadToEnd());
+                        using (StreamWriter writer = new StreamWriter(assetPath + "_rooundtrip"))
+                        {
+                            writer.Write(result.Write<Manifest>());
+                        }
+                    }
+                }
             }
         }
 #endif
