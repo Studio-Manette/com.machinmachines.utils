@@ -18,6 +18,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace MachinMachines.Packages
 {
@@ -141,6 +142,7 @@ namespace MachinMachines.Packages
         /// <returns></returns>
         static public T Read<T>(string data) where T : PackageDependencyHolder
         {
+            Profiler.BeginSample("MachinMachines - Package - Read");
             T result = ScriptableObject.CreateInstance<T>();
             try
             {
@@ -149,6 +151,8 @@ namespace MachinMachines.Packages
             catch (System.Exception exception)
             {
                 Debug.LogError($"PackageDependency - Error on import for {data}: exception '{exception.Message}'");
+
+                Profiler.EndSample();
                 return result;
             }
             string[] lines = data.Split('\n');
@@ -180,11 +184,15 @@ namespace MachinMachines.Packages
             {
                 result.Dependencies = PackageDependency.FromString(strBuilder.ToString());
             }
+
+            Profiler.EndSample();
             return result;
         }
 
         public string Write<T>() where T : PackageDependencyHolder
         {
+            Profiler.BeginSample("MachinMachines - Package - Write");
+
             string packageStr = JsonUtility.ToJson(this, true);
             // TODO string builder
             string result = packageStr;
@@ -217,6 +225,8 @@ namespace MachinMachines.Packages
                 }
                 result = string.Join('\n', lines);
             }
+
+            Profiler.EndSample();
             return result;
         }
     }
