@@ -46,5 +46,29 @@ namespace MachinMachines.Packages
                 version = value.ToString();
             }
         }
+
+#if UNITY_EDITOR
+        [UnityEditor.MenuItem("Assets/Create/MachinMachines/packageManifestTest", priority = 1000)]
+        static void CreateTestFile()
+        {
+            PackageManifest data = CreateInstance<PackageManifest>();
+            data.name = "com.machinmachines.toto";
+            data.displayName = "Machinmachines Toto";
+            data.SemanticVersion = new SemanticVersion{ major = 2, minor = 0, patch = 45 };
+            using (System.IO.StreamWriter stream = new("Assets/package_nodependencies.json"))
+            {
+                stream.Write(data.Write());
+            }
+            data.Dependencies = new PackageDependency[]
+            {
+                new PackageDependency{ packageName = "com.machinsmachines.utils", packageVersion = "1.3.54" },
+                new PackageDependency{ packageName = "com.machinsmachines.utils2", packageVersion = "1.0.11" }
+            };
+            using (System.IO.StreamWriter stream = new("Assets/package.json"))
+            {
+                stream.Write(data.Write());
+            }
+        }
+#endif  // UNITY_EDITOR
     }
 }
