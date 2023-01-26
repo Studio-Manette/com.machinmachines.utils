@@ -34,9 +34,6 @@ namespace MachinMachines.Packages
         // The main use is to have a decoupling so Tupac does not need to know EVERYTHING
         // that goes here - the sending and receiving systems are fully reponsible
         public string additionalData;
-        // All dependencies this packages require
-        // Custom format: private, not automatically serialised
-        private string dependencies;
 
         public SemanticVersion SemanticVersion
         {
@@ -47,18 +44,6 @@ namespace MachinMachines.Packages
             set
             {
                 version = value.ToString();
-            }
-        }
-
-        public override PackageDependency[] Dependencies
-        {
-            get
-            {
-                return PackageDependency.FromString(dependencies);
-            }
-            set
-            {
-                dependencies = PackageDependency.ToString(value);
             }
         }
     }

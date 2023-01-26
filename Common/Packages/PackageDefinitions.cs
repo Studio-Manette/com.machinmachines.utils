@@ -114,7 +114,21 @@ namespace MachinMachines.Packages
     /// </summary>
     public abstract class PackageDependencyHolder : ScriptableObject
     {
-        public abstract PackageDependency[] Dependencies { get; set; }
+        // All listed dependencies
+        // Custom format: private, not automatically serialised
+        private string dependencies;
+
+        public PackageDependency[] Dependencies
+        {
+            get
+            {
+                return PackageDependency.FromString(dependencies);
+            }
+            set
+            {
+                dependencies = PackageDependency.ToString(value);
+            }
+        }
 
         private static readonly Regex kDependenciesStartRegex = new Regex("^[ ]*\"dependencies\": .*$", RegexOptions.Compiled | RegexOptions.Singleline);
         private static readonly Regex kClosingBracketRegex = new Regex("^[ ]*}.*$", RegexOptions.Compiled | RegexOptions.Singleline);
