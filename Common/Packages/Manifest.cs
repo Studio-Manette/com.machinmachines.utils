@@ -20,41 +20,42 @@ namespace MachinMachines.Packages
     [System.Serializable]
     public class Manifest : PackageDependencyHolder
     {
-#if UNITY_EDITOR
-        [UnityEditor.MenuItem("Assets/Create/MachinMachines/manifestTest", priority = 1000)]
-        static void CreateTestFile()
-        {
-            Manifest data = CreateInstance<Manifest>();
-            data.Dependencies = new PackageDependency[]
-            {
-                new PackageDependency{ packageName = "com.machinsmachines.utils", packageVersion = "1.3.54" },
-                new PackageDependency{ packageName = "com.machinsmachines.utils2", packageVersion = "1.0.11" }
-            };
-            using (System.IO.StreamWriter stream = new("Assets/manifest.json"))
-            {
-                stream.Write(data.Write());
-            }
-        }
 
-        [UnityEditor.MenuItem("Assets/MachinMachines/manifestRoundtrip", priority = 1000)]
-        static void Roundtrip()
-        {
-            foreach (string guid in UnityEditor.Selection.assetGUIDs)
-            {
-                string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
-                if (!string.IsNullOrEmpty(assetPath) && assetPath.EndsWith("manifest.json"))
-                {
-                    using (System.IO.StreamReader reader = new(assetPath))
-                    {
-                        Manifest result = Manifest.Read<Manifest>(reader.ReadToEnd());
-                        using (System.IO.StreamWriter writer = new(assetPath + "_roundtrip"))
-                        {
-                            writer.Write(result.Write());
-                        }
-                    }
-                }
-            }
-        }
-#endif  // UNITY_EDITOR
+//#if UNITY_EDITOR
+//        [UnityEditor.MenuItem("Assets/Create/MachinMachines/manifestTest", priority = 1000)]
+//        static void CreateTestFile()
+//        {
+//            Manifest data = CreateInstance<Manifest>();
+//            data.Dependencies = new PackageDependency[]
+//            {
+//                new PackageDependency{ packageName = "com.machinsmachines.utils", packageVersion = "1.3.54" },
+//                new PackageDependency{ packageName = "com.machinsmachines.utils2", packageVersion = "1.0.11" }
+//            };
+//            using (System.IO.StreamWriter stream = new("Assets/manifest.json"))
+//            {
+//                stream.Write(data.Write());
+//            }
+//        }
+
+//        [UnityEditor.MenuItem("Assets/MachinMachines/manifestRoundtrip", priority = 1000)]
+//        static void Roundtrip()
+//        {
+//            foreach (string guid in UnityEditor.Selection.assetGUIDs)
+//            {
+//                string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
+//                if (!string.IsNullOrEmpty(assetPath) && assetPath.EndsWith("manifest.json"))
+//                {
+//                    using (System.IO.StreamReader reader = new(assetPath))
+//                    {
+//                        Manifest result = Manifest.Read<Manifest>(reader.ReadToEnd());
+//                        using (System.IO.StreamWriter writer = new(assetPath + "_roundtrip"))
+//                        {
+//                            writer.Write(result.Write());
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//#endif  // UNITY_EDITOR
     }
 }
