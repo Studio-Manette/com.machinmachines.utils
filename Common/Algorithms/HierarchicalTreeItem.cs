@@ -64,7 +64,7 @@ namespace MachinMachines.Algorithms
         /// </summary>
         public virtual Dictionary<string, Color> CategoryToColorMapping { get { return null; } }
 
-        public HierarchicalTreeItem<T>[] children = new HierarchicalTreeItem<T>[0];
+        public HierarchicalTreeItem<T>[] children = System.Array.Empty<HierarchicalTreeItem<T>>();
 
         /// <summary>
         /// Same as the above but with the correct derived type
