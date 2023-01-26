@@ -20,6 +20,7 @@ namespace MachinMachines.Packages
     [System.Serializable]
     public class Manifest : PackageDependencyHolder
     {
+        // Not handling scoped registries yet: they will be lost during a roundtrip
 
 //#if UNITY_EDITOR
 //        [UnityEditor.MenuItem("Assets/Create/MachinMachines/manifestTest", priority = 1000)]
