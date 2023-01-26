@@ -13,7 +13,11 @@
 // limitations under the License.
 
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+
+using UnityEngine;
 
 namespace MachinMachines.Packages
 {
@@ -97,6 +101,94 @@ namespace MachinMachines.Packages
                 result += "\n";
             }
             result += "}";
+            return result;
+        }
+    }
+
+    /// <summary>
+    /// Base class for scriptable objects with package dependencies field:
+    /// manifest.json, package.json
+    ///
+    /// It handles serialising package dependencies within a regularly,
+    /// JSON serialised scriptable object
+    /// </summary>
+    public abstract class PackageDependencyHolder : ScriptableObject
+    {
+        public abstract PackageDependency[] Dependencies { get; set; }
+
+        private static readonly Regex kDependenciesStartRegex = new Regex("^[ ]*\"dependencies\": .*$", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex kClosingBracketRegex = new Regex("^[ ]*}.*$", RegexOptions.Compiled | RegexOptions.Singleline);
+
+        /// <summary>
+        /// Custom serialisation from a JSON string
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="manifestPath"></param>
+        /// <returns></returns>
+        static public T Read<T>(string data) where T : PackageDependencyHolder
+        {
+            T result = ScriptableObject.CreateInstance<T>();
+            try
+            {
+                JsonUtility.FromJsonOverwrite(data, result);
+            }
+            catch (System.Exception exception)
+            {
+                Debug.LogError($"PackageDependency - Error on import for {data}: exception '{exception.Message}'");
+                return result;
+            }
+            string[] lines = data.Split('\n');
+            int startLineIdx = 0;
+            int endLineIdx = 0;
+            for (int i = 0; i < lines.Length; ++i)
+            {
+                if (kDependenciesStartRegex.Match(lines[i]).Success)
+                {
+                    startLineIdx = i;
+                    // Now look till the end of this section
+                    for (int j = i; j < lines.Length; ++j)
+                    {
+                        if (kClosingBracketRegex.Match(lines[j]).Success)
+                        {
+                            endLineIdx = j + 1;
+                            break;
+                        }
+                    }
+                    break;
+                }
+            }
+            StringBuilder strBuilder = new StringBuilder();
+            for (int i = startLineIdx; i < endLineIdx; ++i)
+            {
+                strBuilder.AppendLine(lines[i]);
+            }
+            if (strBuilder.Length > 0)
+            {
+                result.Dependencies = PackageDependency.FromString(strBuilder.ToString());
+            }
+            return result;
+        }
+
+        public string Write<T>() where T : PackageDependencyHolder
+        {
+            string packageStr = JsonUtility.ToJson(this, true);
+            // TODO string builder
+            string result = packageStr;
+            if (Dependencies.Length > 0)
+            {
+                // Remove the last line after checking it
+                List<string> lines = packageStr.Split('\n').ToList();
+                for (int i = lines.Count - 1; i > 0; --i)
+                {
+                    if (kClosingBracketRegex.Match(lines[i]).Success)
+                    {
+                        // This is where we can insert the dependencies data
+                        lines[i - 1] += ',';
+                        lines.Insert(i, PackageDependency.ToString(Dependencies));
+                    }
+                }
+                result = string.Join('\n', lines);
+            }
             return result;
         }
     }

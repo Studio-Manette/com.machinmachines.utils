@@ -12,12 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-
 using UnityEngine;
 
 namespace MachinMachines.Packages
@@ -27,7 +21,7 @@ namespace MachinMachines.Packages
     /// An additional field "additionalData" allows to store custom informations
     /// </summary>
     [System.Serializable]
-    public class PackageManifest : ScriptableObject
+    public class PackageManifest : PackageDependencyHolder
     {
         // Hiding the inherited member "name", hence this "new"
         new public string name;
@@ -41,11 +35,8 @@ namespace MachinMachines.Packages
         // that goes here - the sending and receiving systems are fully reponsible
         public string additionalData;
         // All dependencies this packages require
-        // Custom format: private, not automatically serialised - look at get/write methods
+        // Custom format: private, not automatically serialised
         private string dependencies;
-
-        private static readonly Regex kDependenciesStartRegex = new Regex("^[ ]*\"dependencies\": .*$", RegexOptions.Compiled | RegexOptions.Singleline);
-        private static readonly Regex kClosingBracketRegex = new Regex("^[ ]*}.*$", RegexOptions.Compiled | RegexOptions.Singleline);
 
         public SemanticVersion SemanticVersion
         {
@@ -59,7 +50,7 @@ namespace MachinMachines.Packages
             }
         }
 
-        public PackageDependency[] Dependencies
+        public override PackageDependency[] Dependencies
         {
             get
             {
@@ -69,76 +60,6 @@ namespace MachinMachines.Packages
             {
                 dependencies = PackageDependency.ToString(value);
             }
-        }
-
-        public static PackageManifest GetAtPath(string manifestPath)
-        {
-            PackageManifest result = ScriptableObject.CreateInstance<PackageManifest>();
-            using (StreamReader stream = new StreamReader(manifestPath))
-            {
-                string data = stream.ReadToEnd();
-                try
-                {
-                    JsonUtility.FromJsonOverwrite(data, result);
-                }
-                catch (System.Exception exception)
-                {
-                    Debug.LogError($"PackageManifest - Error on import for {manifestPath}: exception '{exception.Message}'");
-                    return result;
-                }
-                string[] lines = data.Split('\n');
-                int startLineIdx = 0;
-                int endLineIdx = 0;
-                for (int i = 0; i < lines.Length; ++i)
-                {
-                    if (kDependenciesStartRegex.Match(lines[i]).Success)
-                    {
-                        startLineIdx = i;
-                        // Now look till the end of this section
-                        for (int j = i; j < lines.Length; ++j)
-                        {
-                            if (kClosingBracketRegex.Match(lines[j]).Success)
-                            {
-                                endLineIdx = j + 1;
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-                StringBuilder strBuilder = new StringBuilder();
-                for (int i = startLineIdx; i < endLineIdx; ++i)
-                {
-                    strBuilder.AppendLine(lines[i]);
-                }
-                if (strBuilder.Length > 0)
-                {
-                    result.Dependencies = PackageDependency.FromString(strBuilder.ToString());
-                }
-            }
-            return result;
-        }
-
-        public void WriteAtPath(string filepath)
-        {
-            string packageStr = JsonUtility.ToJson(this, true);
-            string actualPackageStr = packageStr;
-            if (Dependencies.Length > 0)
-            {
-                // Remove the last line after checking it
-                List<string> lines = packageStr.Split('\n').ToList();
-                for (int i = lines.Count - 1; i > 0; --i)
-                {
-                    if (kClosingBracketRegex.Match(lines[i]).Success)
-                    {
-                        // This is where we can insert the dependencies data
-                        lines[i - 1] += ',';
-                        lines.Insert(i, dependencies);
-                    }
-                }
-                actualPackageStr = string.Join('\n', lines);
-            }
-            File.WriteAllText(filepath, actualPackageStr);
         }
     }
 }
