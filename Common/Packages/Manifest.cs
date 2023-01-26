@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-using System.IO;
-
 namespace MachinMachines.Packages
 {
     /// <summary>
@@ -32,9 +30,9 @@ namespace MachinMachines.Packages
                 new PackageDependency{ packageName = "com.machinsmachines.utils", packageVersion = "1.3.54" },
                 new PackageDependency{ packageName = "com.machinsmachines.utils2", packageVersion = "1.0.11" }
             };
-            using (StreamWriter stream = new StreamWriter("Assets/manifest.json"))
+            using (System.IO.StreamWriter stream = new("Assets/manifest.json"))
             {
-                stream.Write(data.Write<Manifest>());
+                stream.Write(data.Write());
             }
         }
 
@@ -46,10 +44,10 @@ namespace MachinMachines.Packages
                 string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(guid);
                 if (!string.IsNullOrEmpty(assetPath) && assetPath.EndsWith("manifest.json"))
                 {
-                    using (StreamReader reader = new(assetPath))
+                    using (System.IO.StreamReader reader = new(assetPath))
                     {
                         Manifest result = Manifest.Read<Manifest>(reader.ReadToEnd());
-                        using (StreamWriter writer = new StreamWriter(assetPath + "_rooundtrip"))
+                        using (System.IO.StreamWriter writer = new(assetPath + "_roundtrip"))
                         {
                             writer.Write(result.Write<Manifest>());
                         }
@@ -57,6 +55,6 @@ namespace MachinMachines.Packages
                 }
             }
         }
-#endif
+#endif  // UNITY_EDITOR
     }
 }

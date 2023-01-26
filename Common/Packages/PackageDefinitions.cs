@@ -115,10 +115,12 @@ namespace MachinMachines.Packages
     /// </summary>
     public abstract class PackageDependencyHolder : ScriptableObject
     {
-        // All listed dependencies
         // Custom format: private, not automatically serialised
         private string dependencies;
 
+        /// <summary>
+        /// All listed dependencies
+        /// </summary>
         public PackageDependency[] Dependencies
         {
             get
@@ -137,9 +139,6 @@ namespace MachinMachines.Packages
         /// <summary>
         /// Custom serialisation from a JSON string
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="manifestPath"></param>
-        /// <returns></returns>
         static public T Read<T>(string data) where T : PackageDependencyHolder
         {
             Profiler.BeginSample("MachinMachines - Package - Read");
@@ -190,6 +189,9 @@ namespace MachinMachines.Packages
         }
 
         public string Write<T>() where T : PackageDependencyHolder
+        /// <summary>
+        /// Custom serialisation to a JSON string
+        /// </summary>
         {
             Profiler.BeginSample("MachinMachines - Package - Write");
 
@@ -200,7 +202,7 @@ namespace MachinMachines.Packages
             {
                 // Remove the last line after checking it
                 List<string> lines = packageStr.Split('\n').ToList();
-                bool addComma = true;
+                bool shouldAddComma = true;
                 // Handling the special case for an empty structure
                 if (lines.Count == 1)
                 {
@@ -208,14 +210,14 @@ namespace MachinMachines.Packages
                     {
                         lines[0] = "{\n";
                         lines.Add("}\n");
-                        addComma = false;
+                        shouldAddComma = false;
                     }
                 }
                 for (int i = lines.Count - 1; i > 0; --i)
                 {
                     if (kClosingBracketRegex.Match(lines[i]).Success)
                     {
-                        if (addComma)
+                        if (shouldAddComma)
                         {
                             lines[i - 1] += ',';
                         }
