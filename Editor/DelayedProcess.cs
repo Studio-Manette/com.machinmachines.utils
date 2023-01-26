@@ -17,7 +17,7 @@ using System.Collections.Generic;
 
 using UnityEditor;
 
-namespace MachinMachines.Editor
+namespace MachinMachines.EditorTools
 {
     /// <summary>
     /// A helper to stagger items processing
