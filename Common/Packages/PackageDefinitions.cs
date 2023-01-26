@@ -112,8 +112,11 @@ namespace MachinMachines.Packages
     ///
     /// It handles serialising package dependencies within a regularly,
     /// JSON serialised scriptable object
+    ///
+    /// It is not abstract as their are usages to instantiating the base class:
+    /// to gather dependencies only rather than the entire data around it
     /// </summary>
-    public abstract class PackageDependencies : ScriptableObject
+    public class PackageDependencies : ScriptableObject
     {
         // Custom format: private, not automatically serialised
         private string _dependenciesStr;
