@@ -192,12 +192,26 @@ namespace MachinMachines.Packages
             {
                 // Remove the last line after checking it
                 List<string> lines = packageStr.Split('\n').ToList();
+                bool addComma = true;
+                // Handling the special case for an empty structure
+                if (lines.Count == 1)
+                {
+                    if (lines[0] == "{}")
+                    {
+                        lines[0] = "{\n";
+                        lines.Add("}\n");
+                        addComma = false;
+                    }
+                }
                 for (int i = lines.Count - 1; i > 0; --i)
                 {
                     if (kClosingBracketRegex.Match(lines[i]).Success)
                     {
+                        if (addComma)
+                        {
+                            lines[i - 1] += ',';
+                        }
                         // This is where we can insert the dependencies data
-                        lines[i - 1] += ',';
                         lines.Insert(i, PackageDependency.ToString(Dependencies));
                     }
                 }
