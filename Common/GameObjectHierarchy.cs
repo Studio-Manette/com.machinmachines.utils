@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -121,6 +122,23 @@ namespace MachinMachines.Utils
                                     .Reverse()
                                     .Select(item => item.name)
                               );
+        }
+
+        /// <summary>
+        /// Retrieve a transform from its name in a game object children
+        /// Similar to Transform.Find() but case sensitivity is controlled
+        /// </summary>
+        public static Transform Find(GameObject gameObject, string n)
+        {
+            GameObject found = BrowseChildHierarchy(gameObject)
+                                .Where(item => item.name.Equals(n,
+                                                                StringComparison.InvariantCultureIgnoreCase))
+                                .FirstOrDefault();
+            if(found != null)
+            {
+                return found.transform;
+            }
+            return null;
         }
     }
 }
