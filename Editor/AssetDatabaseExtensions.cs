@@ -48,31 +48,39 @@ namespace MachinMachines.Utils
 
         public static void CreateOrReplaceAsset<T>(Object asset, string path) where T : Object
         {
-            T existingAsset = AssetDatabase.LoadAssetAtPath<T>(path);
-            if (existingAsset != null)
+            try
             {
-                EditorUtility.CopySerialized(asset, existingAsset);
-                EditorUtility.SetDirty(existingAsset);
-            }
-            else
-            {
-                string folderPathStr = "";
-                string[] folderPath = path.Split(Path.DirectorySeparatorChar);
-                bool copyItems = false;
-                for (int i = 0; i < folderPath.Length - 1; ++i)
+                AssetDatabase.StartAssetEditing();
+                T existingAsset = AssetDatabase.LoadAssetAtPath<T>(path);
+                if (existingAsset != null)
                 {
-                    if (copyItems)
-                    {
-                        folderPathStr += folderPath[i];
-                        folderPathStr += Path.DirectorySeparatorChar;
-                    }
-                    if (folderPath[i] == "Assets")
-                    {
-                        copyItems = true;
-                    }
+                    EditorUtility.CopySerialized(asset, existingAsset);
+                    EditorUtility.SetDirty(existingAsset);
                 }
-                Directory.CreateDirectory(Path.Combine(Application.dataPath, folderPathStr));
-                AssetDatabase.CreateAsset(asset, path);
+                else
+                {
+                    string folderPathStr = "";
+                    string[] folderPath = path.Split(Path.DirectorySeparatorChar);
+                    bool copyItems = false;
+                    for (int i = 0; i < folderPath.Length - 1; ++i)
+                    {
+                        if (copyItems)
+                        {
+                            folderPathStr += folderPath[i];
+                            folderPathStr += Path.DirectorySeparatorChar;
+                        }
+                        if (folderPath[i] == "Assets")
+                        {
+                            copyItems = true;
+                        }
+                    }
+                    Directory.CreateDirectory(Path.Combine(Application.dataPath, folderPathStr));
+                    AssetDatabase.CreateAsset(asset, path);
+                }
+            }
+            finally
+            {
+                AssetDatabase.StopAssetEditing();
             }
         }
 
