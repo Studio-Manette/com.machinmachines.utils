@@ -58,9 +58,9 @@ namespace MachinMachines.Packages
                                              bool useOfflineMode = true)
         {
             // Trigger retrieval of all packages dependencies
-            ListRequest request = Client.List(useOfflineMode);
             DelayedProcess<PendingOperation>.onNextUpdate = OnListPackagesCallback;
             DelayedProcess<PendingOperation>.Push(new PendingOperation
+            ListRequest request = Client.List(useOfflineMode, true);
             {
                 Request = request,
                 OnCompletionCallback = packageCollection => BuildChildrenTree(packageCollection, data, onCompletionCallback)
