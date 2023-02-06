@@ -45,7 +45,7 @@ namespace MachinMachines.Packages
         {
             get
             {
-                return Item;
+                return string.IsNullOrEmpty(Item) ? "" : Item;
             }
         }
 

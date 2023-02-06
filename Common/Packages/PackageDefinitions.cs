@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -116,8 +117,10 @@ namespace MachinMachines.Packages
     /// It is not abstract as their are usages to instantiating the base class:
     /// to gather dependencies only rather than the entire data around it
     /// </summary>
+    [Serializable]
     public class PackageDependencies : ScriptableObject
     {
+        new public string name;
         // Custom format: private, not automatically serialised
         private string _dependenciesStr;
         // Cache of the above
@@ -163,6 +166,12 @@ namespace MachinMachines.Packages
                 Profiler.EndSample();
                 return result;
             }
+            // Prevent null name
+            if (string.IsNullOrEmpty(result.name))
+            {
+                result.name = "root";
+            }
+
             string[] lines = data.Split('\n');
             int startLineIdx = 0;
             int endLineIdx = 0;

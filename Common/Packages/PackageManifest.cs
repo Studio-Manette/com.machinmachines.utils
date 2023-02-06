@@ -23,8 +23,6 @@ namespace MachinMachines.Packages
     [System.Serializable]
     public class PackageManifest : PackageDependencies
     {
-        // Hiding the inherited member "name", hence this "new"
-        new public string name;
         public string displayName;
         // The version has to be a semantic version
         // Custom format: private
