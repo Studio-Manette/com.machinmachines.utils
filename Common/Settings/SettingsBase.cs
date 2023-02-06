@@ -101,37 +101,23 @@ namespace MachinMachines.Utils.Settings
         {
             if (_instance == null)
             {
-                try
-                {
-#if UNITY_EDITOR
-                    AssetDatabase.StartAssetEditing();
-#endif  // UNITY_EDITOR
+                _instance = ScriptableObject.CreateInstance<T>();
+                _instance._editorSettingsPath = kEditorSettingsPath;
+                _instance._runtimeSettingsPath = kRuntimeSettingsPath;
 
-                    _instance = ScriptableObject.CreateInstance<T>();
-                    _instance._editorSettingsPath = kEditorSettingsPath;
-                    _instance._runtimeSettingsPath = kRuntimeSettingsPath;
-
-                    string directory = Path.GetDirectoryName(_instance.SettingsPath);
-                    if (!Directory.Exists(directory))
-                    {
-                        Directory.CreateDirectory(directory);
-                    }
-                    if (File.Exists(_instance.SettingsPath))
-                    {
-                        JsonUtility.FromJsonOverwrite(File.ReadAllText(_instance.SettingsPath), _instance);
-                    }
-                    // We always write the file in case the base ScriptableObject gets updated from the code
-                    // TODO @gama: decide whether the file or the code is right once and for all!
-                    SerialiseToFile();
-                    CreateFolders(_instance);
-                }
-                finally
+                string directory = Path.GetDirectoryName(_instance.SettingsPath);
+                if (!Directory.Exists(directory))
                 {
-#if UNITY_EDITOR
-                    AssetDatabase.StopAssetEditing();
-                    AssetDatabase.Refresh(ImportAssetOptions.ForceUpdate);
-#endif  // UNITY_EDITOR
+                    Directory.CreateDirectory(directory);
                 }
+                if (File.Exists(_instance.SettingsPath))
+                {
+                    JsonUtility.FromJsonOverwrite(File.ReadAllText(_instance.SettingsPath), _instance);
+                }
+                // We always write the file in case the base ScriptableObject gets updated from the code
+                // TODO @gama: decide whether the file or the code is right once and for all!
+                SerialiseToFile();
+                CreateFolders(_instance);
             }
             return _instance;
         }
