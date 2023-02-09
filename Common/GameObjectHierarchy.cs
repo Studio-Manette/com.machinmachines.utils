@@ -127,14 +127,15 @@ namespace MachinMachines.Utils
         /// <summary>
         /// Retrieve a transform from its name in a game object children
         /// Similar to Transform.Find() but case sensitivity is controlled
+        /// + it is recursive into the entire children hierarchy!
         /// </summary>
-        public static Transform Find(GameObject gameObject, string n)
+        public static Transform Find_r(GameObject gameObject, string n)
         {
             GameObject found = BrowseChildHierarchy(gameObject)
                                 .Where(item => item.name.Equals(n,
                                                                 StringComparison.InvariantCultureIgnoreCase))
                                 .FirstOrDefault();
-            if(found != null)
+            if (found != null)
             {
                 return found.transform;
             }
