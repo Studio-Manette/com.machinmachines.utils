@@ -82,7 +82,7 @@ namespace MachinMachines.Utils
                 if (EditorGUI.DropdownButton(button1Rect, new GUIContent("Project"), FocusType.Passive, s_OpenPathButtonStyle))
                 {
                     // Only look for locations within the projet
-                    if (property.stringValue.StartsWith("Assets"))
+                    if (property.stringValue.StartsWith("Assets") || property.stringValue.StartsWith("Packages"))
                     {
                         UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(property.stringValue);
                         if (obj != null)
