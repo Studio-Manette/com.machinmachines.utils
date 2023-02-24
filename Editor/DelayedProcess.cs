@@ -54,6 +54,7 @@ namespace MachinMachines.EditorTools
                 PendingAssets.Enqueue(item); ;
                 EditorApplication.update += NextEditorUpdate;
             }
+            EditorApplication.QueuePlayerLoopUpdate();
         }
 
         static private void NextEditorUpdate()
