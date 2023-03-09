@@ -23,7 +23,7 @@ namespace MachinMachines.Common.Repository
     /// <summary>
     /// Import repository asset and notify the global manager for this new object
     /// </summary>
-    [ScriptedImporter(1, ".filesrepository")]
+    [ScriptedImporter(1, "filesrepository")]
     public class FilesRepositoryImporter : ScriptedImporter
     {
         public override void OnImportAsset(AssetImportContext ctx)
