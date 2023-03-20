@@ -99,5 +99,64 @@ namespace MachinMachines.Utils
             }
             return assets;
         }
+
+        /// <summary>
+        /// Same as AssetDatabase.GUIDFromAssetPath but able to extract it from assets outside the project
+        /// To do so it parses the associated metafile to the given path (if found)
+        /// </summary>
+        public static GUID GUIDFromAssetPath(string assetPath)
+        {
+            if (File.Exists(assetPath))
+            {
+                string metaFilePath = assetPath + ".meta";
+                if (File.Exists(metaFilePath))
+                {
+                    using (StreamReader stream = new(metaFilePath))
+                    {
+                        // Skip 1 line
+                        stream.ReadLine();
+                        string guidHash = stream.ReadLine();
+                        // Extract the guid hex manually
+                        string[] tokens = guidHash.Split(' ');
+                        return new GUID(tokens[1]);
+                    }
+                }
+            }
+            return new GUID();
+        }
+
+        /// <summary>
+        /// Modify the given asset GUID by touching its metadata file
+        /// </summary>
+        public static bool ChangeGUID(string assetPath, GUID newGUID)
+        {
+            if (File.Exists(assetPath))
+            {
+                string metaFilePath = assetPath + ".meta";
+                if (File.Exists(metaFilePath))
+                {
+                    string[] metaContent;
+                    using (StreamReader stream = new(metaFilePath))
+                    {
+                        metaContent = stream.ReadToEnd().Split('\n',
+                                                               System.StringSplitOptions.RemoveEmptyEntries);
+                    }
+                    string[] hashTokens = metaContent[1].Split(' ');
+                    hashTokens[1] = newGUID.ToString();
+                    metaContent[1] = string.Join(' ', hashTokens);
+                    using (StreamWriter stream = new(metaFilePath))
+                    {
+                        // Unity uses this style
+                        stream.NewLine = "\n";
+                        foreach (string line in metaContent)
+                        {
+                            stream.WriteLine(line);
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
