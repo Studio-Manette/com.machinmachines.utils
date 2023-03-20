@@ -28,6 +28,11 @@ namespace MachinMachines.Common
             return new Vector3(-positionVector.x, positionVector.z, -positionVector.y);
         }
 
+        public static Vector3 ScaleFromBlenderToUnity(this Vector3 positionVector)
+        {
+            return new Vector3(positionVector.x, positionVector.z, positionVector.y);
+        }
+
         /// <summary>
         /// Apply the input PRS data to the given transform
         /// </summary>
@@ -46,7 +51,7 @@ namespace MachinMachines.Common
                                                                     existingTransform.localEulerAngles.z);
                 existingTransform.localEulerAngles += convertedRot;
             }
-            existingTransform.localScale = blenderScale;
+            existingTransform.localScale = blenderScale.ScaleFromBlenderToUnity();
         }
     }
 }
