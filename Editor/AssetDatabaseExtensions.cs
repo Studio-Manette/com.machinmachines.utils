@@ -90,7 +90,7 @@ namespace MachinMachines.Utils
         /// </summary>
         public static GUID GUIDFromAssetPath(string assetPath)
         {
-            if (File.Exists(assetPath))
+            if (File.Exists(assetPath) || Directory.Exists(assetPath))
             {
                 string metaFilePath = assetPath + ".meta";
                 if (File.Exists(metaFilePath))
@@ -110,11 +110,11 @@ namespace MachinMachines.Utils
         }
 
         /// <summary>
-        /// Modify the given asset GUID by touching its metadata file
+        /// Modify the given asset (including folders) GUID by touching its metadata file
         /// </summary>
         public static bool ChangeGUID(string assetPath, GUID newGUID)
         {
-            if (File.Exists(assetPath))
+            if (File.Exists(assetPath) || Directory.Exists(assetPath))
             {
                 string metaFilePath = assetPath + ".meta";
                 if (File.Exists(metaFilePath))
