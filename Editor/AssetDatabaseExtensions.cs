@@ -84,22 +84,6 @@ namespace MachinMachines.Utils
             }
         }
 
-        public static List<T> FindAssetsByType<T>() where T : UnityEngine.Object
-        {
-            List<T> assets = new List<T>();
-            string[] guids = AssetDatabase.FindAssets(string.Format("t:{0}", typeof(T)));
-            for (int i = 0; i < guids.Length; i++)
-            {
-                string assetPath = AssetDatabase.GUIDToAssetPath(guids[i]);
-                T asset = AssetDatabase.LoadAssetAtPath<T>(assetPath);
-                if (asset != null)
-                {
-                    assets.Add(asset);
-                }
-            }
-            return assets;
-        }
-
         /// <summary>
         /// Same as AssetDatabase.GUIDFromAssetPath but able to extract it from assets outside the project
         /// To do so it parses the associated metafile to the given path (if found)
