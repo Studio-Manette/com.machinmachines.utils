@@ -26,9 +26,9 @@ namespace MachinMachines.Packages
     /// <summary>
     /// Packages versions have to be a semantic version, hence this helper class
     ///
-    /// Notice that fields are actual ints so no custoom versions such as "1.0.6-dev" can be used for now
+    /// Notice that fields are actual ints so no custom versions such as "1.0.6-dev" can be used for now
     /// </summary>
-    [System.Serializable]
+    [Serializable]
     public struct SemanticVersion
     {
         public int major;
@@ -50,7 +50,7 @@ namespace MachinMachines.Packages
     /// <summary>
     /// Describes a package dependency as listed in the package manifest
     /// </summary>
-    [System.Serializable]
+    [Serializable]
     public class PackageDependency
     {
         public string packageName;
@@ -159,7 +159,7 @@ namespace MachinMachines.Packages
             {
                 JsonUtility.FromJsonOverwrite(data, result);
             }
-            catch (System.Exception exception)
+            catch (Exception exception)
             {
                 Debug.LogError($"PackageDependency - Error on import for {data}: exception '{exception.Message}'");
 
