@@ -28,7 +28,32 @@ namespace MachinMachines.Common
             return new Vector3(-positionVector.x, positionVector.z, -positionVector.y);
         }
 
+        public static Vector3 EulerAnglesFromUnityToBlender(this Vector3 positionVector)
+        {
+            return new Vector3(positionVector.x, positionVector.z, -positionVector.y);
+        }
+
+        public static Vector3 EulerAnglesFromBlenderToUnity(this Vector3 positionVector)
+        {
+            return new Vector3(positionVector.x, -positionVector.z, positionVector.y);
+        }
+
+        public static Quaternion FromBlenderToUnity(this Quaternion rotation)
+        {
+            return new Quaternion(rotation.y, -rotation.w, rotation.z, rotation.x);
+        }
+
+        public static Quaternion QuaternionFromUnityToBlender(this Quaternion rotation)
+        {
+            return new Quaternion(rotation.z, rotation.x, rotation.w, rotation.y);
+        }
+
         public static Vector3 ScaleFromBlenderToUnity(this Vector3 positionVector)
+        {
+            return new Vector3(positionVector.x, positionVector.z, positionVector.y);
+        }
+
+        public static Vector3 ScaleFromUnityToBlender(this Vector3 positionVector)
         {
             return new Vector3(positionVector.x, positionVector.z, positionVector.y);
         }
@@ -39,11 +64,11 @@ namespace MachinMachines.Common
         public static void FromBlenderToUnity(
                 this Transform existingTransform,
                 Vector3 blenderPosition,
-                Vector3 blenderRotation,
+                Quaternion blenderRotation,
                 Vector3 blenderScale)
         {
             existingTransform.localPosition = blenderPosition.FromBlenderToUnity();
-            existingTransform.localEulerAngles = -1.0f * blenderRotation.FromBlenderToUnity();
+            existingTransform.localRotation = blenderRotation.FromBlenderToUnity();
             existingTransform.localScale = blenderScale.ScaleFromBlenderToUnity();
         }
     }
