@@ -43,14 +43,7 @@ namespace MachinMachines.Common
                 Vector3 blenderScale)
         {
             existingTransform.localPosition = blenderPosition.FromBlenderToUnity();
-            if (true)//master.rotation.eulerAngles != rot)
-            {
-                Vector3 convertedRot = -1.0f * blenderRotation.FromBlenderToUnity();
-                existingTransform.localEulerAngles = new Vector3(existingTransform.localEulerAngles.x,
-                                                                    0.0f,
-                                                                    existingTransform.localEulerAngles.z);
-                existingTransform.localEulerAngles += convertedRot;
-            }
+            existingTransform.localEulerAngles = -1.0f * blenderRotation.FromBlenderToUnity();
             existingTransform.localScale = blenderScale.ScaleFromBlenderToUnity();
         }
     }
