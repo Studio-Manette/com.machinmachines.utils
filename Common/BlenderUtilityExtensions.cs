@@ -45,7 +45,7 @@ namespace MachinMachines.Common
 
         public static Quaternion QuaternionFromUnityToBlender(this Quaternion rotation)
         {
-            return new Quaternion(rotation.z, rotation.x, rotation.w, rotation.y);
+            return new Quaternion(rotation.w, rotation.x, rotation.z, -rotation.y);
         }
 
         public static Vector3 ScaleFromBlenderToUnity(this Vector3 positionVector)
