@@ -50,6 +50,11 @@ namespace MachinMachines.Quantile
         [SerializeField]
         private int TotalItemsCount;
 
+        public CountMapGeneric(int lowerBucketIndex = 0, int higherBucketIndex = 10)
+            : base(lowerBucketIndex, higherBucketIndex)
+        {
+        }
+
         protected override sealed void AddItemInternal(int bucketIdx, T item)
         {
             string filepath = GetItemFilePath(item);
@@ -69,10 +74,12 @@ namespace MachinMachines.Quantile
     [Serializable]
     public class CountMap : CountMapGeneric<string>
     {
-        public override int kLowerBucketIndex { get { return 0; } }
-        public override int kHigherBucketIndex { get { return 10; } }
-
         private Dictionary<string, int> RefCountToUsage = new Dictionary<string, int>();
+
+        public CountMap(int lowerBucketIndex = 0, int higherBucketIndex = 10)
+            : base(lowerBucketIndex, higherBucketIndex)
+        {
+        }
 
         protected override void ResetInternal()
         {

@@ -53,8 +53,8 @@ namespace MachinMachines.Quantile
     public abstract class QuantileMap<T, BucketType> where BucketType : MapBucket, new()
     {
         // To be overridden by inheriting classes
-        public abstract int kLowerBucketIndex { get; }
-        public abstract int kHigherBucketIndex { get; }
+        public virtual int kLowerBucketIndex { get { return _lowerBucketIndex; } }
+        public virtual int kHigherBucketIndex { get { return _higherBucketIndex; } }
 
         // We also plan to have a "<=min" and a ">max" buckets
         protected int kBucketsCount { get { return kHigherBucketIndex - kLowerBucketIndex + 2; } }
@@ -62,8 +62,13 @@ namespace MachinMachines.Quantile
         [SerializeField]
         protected BucketType[] Buckets;
 
-        public QuantileMap()
+        private int _lowerBucketIndex = 0;
+        private int _higherBucketIndex = 10;
+
+        public QuantileMap(int lowerBucketIndex = 0, int higherBucketIndex = 10)
         {
+            _lowerBucketIndex = lowerBucketIndex;
+            _higherBucketIndex = higherBucketIndex;
             Buckets = new BucketType[kBucketsCount];
             for (int idx = 0; idx < kBucketsCount; ++idx)
             {
