@@ -172,7 +172,7 @@ namespace MachinMachines.Utils.Settings
                             string pathRoot = Path.GetPathRoot(propertyValue);
                             if (string.IsNullOrEmpty(pathRoot))
                             {
-                                if (propertyValue.StartsWith("Assets", System.StringComparison.InvariantCultureIgnoreCase))
+                                if (propertyValue.StartsWith("Assets", System.StringComparison.OrdinalIgnoreCase))
                                 {
                                     // If we are trying to create some "assets/***" subfolder within a runtime build, just stop
                                     if (!Application.isEditor)

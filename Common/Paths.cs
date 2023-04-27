@@ -116,7 +116,7 @@ namespace MachinMachines.Utils
             Uri relativeUri = fromUri.MakeRelativeUri(toUri);
             string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
 
-            if (toUri.Scheme.Equals("file", StringComparison.InvariantCultureIgnoreCase))
+            if (toUri.Scheme.Equals("file", StringComparison.OrdinalIgnoreCase))
             {
                 relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
             }

@@ -133,7 +133,7 @@ namespace MachinMachines.Utils
         {
             GameObject found = BrowseChildHierarchy(gameObject)
                                 .Where(item => item.name.Equals(n,
-                                                                StringComparison.InvariantCultureIgnoreCase))
+                                                                StringComparison.OrdinalIgnoreCase))
                                 .FirstOrDefault();
             if (found != null)
             {

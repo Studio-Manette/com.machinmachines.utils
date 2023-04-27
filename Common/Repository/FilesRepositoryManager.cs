@@ -97,7 +97,7 @@ namespace MachinMachines.Common.Repository
         {
             foreach (FilesRepository.Repository repo in GetRepositoriesForUsage(usage))
             {
-                if (repo.Path.StartsWith(path, System.StringComparison.InvariantCultureIgnoreCase))
+                if (repo.Path.StartsWith(path, System.StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }
