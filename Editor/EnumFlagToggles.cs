@@ -40,7 +40,7 @@ namespace MachinMachines.EditorUI
                 EditorGUILayout.LabelField(_enum.GetType().Name, EditorStyles.miniBoldLabel);
 
                 EditorGUI.BeginChangeCheck();
-                // TODO @gama use an actual bitfield
+                // \todo @gama use an actual bitfield
                 bool[] setBits = new bool[kValues.Length];
                 for (int i = 0; i < kValues.Length; ++i)
                 {

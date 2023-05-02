@@ -115,7 +115,7 @@ namespace MachinMachines.Utils.Settings
                     JsonUtility.FromJsonOverwrite(File.ReadAllText(_instance.SettingsPath), _instance);
                 }
                 // We always write the file in case the base ScriptableObject gets updated from the code
-                // TODO @gama: decide whether the file or the code is right once and for all!
+                // \todo @gama: decide whether the file or the code is right once and for all!
                 SerialiseToFile();
                 CreateFolders(_instance);
             }
