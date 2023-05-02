@@ -74,11 +74,23 @@ namespace MachinMachines.Quantile
     [Serializable]
     public class CountMap : CountMapGeneric<string>
     {
+        public IEnumerable<string> Items
+        {
+            get
+            {
+                return RefCountToUsage.Keys.ToHashSet();
+            }
+        }
         private Dictionary<string, int> RefCountToUsage = new Dictionary<string, int>();
 
         public CountMap(int lowerBucketIndex = 0, int higherBucketIndex = 10)
             : base(lowerBucketIndex, higherBucketIndex)
         {
+        }
+
+        public int GetItemUsage(string item)
+        {
+            return RefCountToUsage[item];
         }
 
         protected override void ResetInternal()
