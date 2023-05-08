@@ -18,7 +18,7 @@ using System.Linq;
 
 using UnityEngine;
 
-namespace MachinMachines.Utils
+namespace MachinMachines.GameObjectHierarchy
 {
     /// <summary>
     /// Compare two game objects using only their scene path
@@ -45,24 +45,24 @@ namespace MachinMachines.Utils
                 return true;
             }
             string lhsRelativePath = string.Join('/',
-                GameObjectHierarchy.GetScenePath(lhs).Split('/')
-                                                     .Skip(_rootItemsSkipCount));
+                GameObjectHierarchyOperations.GetScenePath(lhs).Split('/')
+                                                               .Skip(_rootItemsSkipCount));
             string rhsRelativePath = string.Join('/',
-                GameObjectHierarchy.GetScenePath(rhs).Split('/')
-                                                     .Skip(_rootItemsSkipCount));
+                GameObjectHierarchyOperations.GetScenePath(rhs).Split('/')
+                                                               .Skip(_rootItemsSkipCount));
             return lhsRelativePath == rhsRelativePath;
         }
 
         public int GetHashCode(GameObject obj)
         {
             string relativePath = string.Join('/',
-                GameObjectHierarchy.GetScenePath(obj).Split('/')
-                                                     .Skip(_rootItemsSkipCount));
+                GameObjectHierarchyOperations.GetScenePath(obj).Split('/')
+                                                               .Skip(_rootItemsSkipCount));
             return relativePath.GetHashCode();
         }
     }
 
-    public static class GameObjectHierarchy
+    public static class GameObjectHierarchyOperations
     {
         /// <summary>
         /// Browse all game objects children of the given root game object (not included in the results)
