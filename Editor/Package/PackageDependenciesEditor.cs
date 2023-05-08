@@ -18,12 +18,17 @@ using UnityEditor;
 using UnityEngine;
 
 using MachinMachines.DGML;
+using UnityEditor.IMGUI.Controls;
+using MachinMachines.Utils;
+using UnityEngine.UIElements;
 
 namespace MachinMachines.Packages
 {
     public class PackageDependenciesWindow : EditorWindow
     {
         private TextAsset _packagesDependenciesTextAsset = null;
+        static TreeViewState treeViewState_ = null;
+        static GenericHierarchicalTreeView<PackageDependenciesGraphItem> treeView_ = null;
 
         [MenuItem("MachinMachines/PackageDependencies")]
         static void Init()
@@ -52,11 +57,22 @@ namespace MachinMachines.Packages
                     }
                 }
             }
+            if (treeView_ != null)
+            {
+                var rect = EditorGUILayout.BeginVertical(GUILayout.ExpandHeight(true));
+
+                treeView_.OnGUI(rect);
+
+                EditorGUILayout.EndVertical();
+            }
         }
 
         static private void DumpAsDGML(PackageDependenciesGraphItem graph, string graphPath)
         {
             graph.DumpAsDGMLToPath(graphPath);
+            treeViewState_ = new TreeViewState();
+            treeView_ = new GenericHierarchicalTreeView<PackageDependenciesGraphItem>(graph, treeViewState_);
+            treeView_.Reload();
         }
     }
 }
