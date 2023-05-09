@@ -73,14 +73,16 @@ namespace MachinMachines.Packages
         /// </summary>
         private static void OnListPackagesCallback(PendingOperation pending)
         {
+            bool isCompleted = false;
             if (pending.Request != null)
             {
                 if (pending.Request.IsCompleted)
                 {
                     pending.OnCompletionCallback?.Invoke(pending.Request.Result);
+                    isCompleted = true;
                 }
             }
-            else
+            if (!isCompleted)
             {
                 // Re-trigger it
                 DelayedProcess<PendingOperation>.Push(pending);
@@ -106,8 +108,9 @@ namespace MachinMachines.Packages
                 children = children
             };
 
-            Profiler.EndSample();
             onCompletionCallback?.Invoke(result);
+
+            Profiler.EndSample();
         }
 
         /// <summary>

@@ -15,20 +15,21 @@
 using System.IO;
 
 using UnityEditor;
+using UnityEditor.IMGUI.Controls;
+
 using UnityEngine;
+using UnityEngine.Profiling;
 
 using MachinMachines.DGML;
-using UnityEditor.IMGUI.Controls;
 using MachinMachines.Utils;
-using UnityEngine.UIElements;
 
 namespace MachinMachines.Packages
 {
     public class PackageDependenciesWindow : EditorWindow
     {
         private TextAsset _packagesDependenciesTextAsset = null;
-        static TreeViewState treeViewState_ = null;
-        static GenericHierarchicalTreeView<PackageDependenciesGraphItem> treeView_ = null;
+        private TreeViewState treeViewState_ = null;
+        private GenericHierarchicalTreeView<PackageDependenciesGraphItem> treeView_ = null;
 
         [MenuItem("MachinMachines/PackageDependencies")]
         static void Init()
@@ -53,7 +54,7 @@ namespace MachinMachines.Packages
                         PackageDependencies data = PackageDependencies.Read<PackageDependencies>(stream.ReadToEnd());
                         string graphPath = Path.ChangeExtension(assetPath, DGMLSerialiser.Extension);
                         PackageDependenciesGraphItem.BuildChildrenTree(data,
-                                                                       graph => DumpAsDGML(graph, graphPath));
+                                                                       graph => OnGraphCreation(graph, graphPath));
                     }
                 }
             }
@@ -67,12 +68,16 @@ namespace MachinMachines.Packages
             }
         }
 
-        static private void DumpAsDGML(PackageDependenciesGraphItem graph, string graphPath)
+        private void OnGraphCreation(PackageDependenciesGraphItem graph, string graphPath)
         {
+            Profiler.BeginSample("MachinMachines - PackageDependencies - OnGraphCreation");
+
             graph.DumpAsDGMLToPath(graphPath);
             treeViewState_ = new TreeViewState();
             treeView_ = new GenericHierarchicalTreeView<PackageDependenciesGraphItem>(graph, treeViewState_);
             treeView_.Reload();
+
+            Profiler.EndSample();
         }
     }
 }
