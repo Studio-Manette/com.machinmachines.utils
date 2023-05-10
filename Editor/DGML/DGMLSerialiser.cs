@@ -20,6 +20,7 @@ using System.Xml.Serialization;
 using MachinMachines.Algorithms;
 
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace MachinMachines.DGML
 {
@@ -30,6 +31,8 @@ namespace MachinMachines.DGML
     {
         public static DirectedGraph GenerateDirectedGraph<T>(this HierarchicalTreeItem<T> hierarchicalTreeItem) where T : class
         {
+            Profiler.BeginSample("HierarchicalTreeItem - GenerateDirectedGraph");
+
             DirectedGraph result = new DirectedGraph { Title = $"{hierarchicalTreeItem.Name}_graph" };
             // Using only links (from child to parent)
             IEnumerable<(HierarchicalTreeItem<T>, HierarchicalTreeItem<T>)> links = HierarchicalTreeItem<T>.ConstructLinks_r(hierarchicalTreeItem);
@@ -63,6 +66,8 @@ namespace MachinMachines.DGML
                                               })
                                               .ToHashSet();
             }
+
+            Profiler.EndSample();
             return result;
         }
 
