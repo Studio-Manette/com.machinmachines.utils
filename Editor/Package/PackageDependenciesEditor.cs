@@ -76,6 +76,7 @@ namespace MachinMachines.Packages
             treeViewState_ = new TreeViewState();
             treeView_ = new GenericHierarchicalTreeView<PackageDependenciesGraphItem>(graph, treeViewState_);
             treeView_.Reload();
+            treeView_.ExpandAll();
 
             Profiler.EndSample();
         }
