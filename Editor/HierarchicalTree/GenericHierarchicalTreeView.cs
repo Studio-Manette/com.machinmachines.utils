@@ -52,13 +52,18 @@ namespace MachinMachines.Utils
         {
             Debug.Assert(root_ != null, "Missing a valid root");
 
-            var hiddenRoot = new TreeViewItem { id = 0, depth = -1, displayName = "Hidden Root" };
-            id_ = 0;
-            AddTreeViewItem_r(hiddenRoot,
+            var newItem = new GenericHierarchicalTreeViewItem
+            (
+                0,
+                -1,
+                root_.Name
+            );
+            id_ = 1;
+            AddTreeViewItem_r(newItem,
                               root_,
                               ref id_);
 
-            return hiddenRoot;
+            return newItem;
         }
 
         void AddTreeViewItem_r(TreeViewItem parentItem,
@@ -67,7 +72,7 @@ namespace MachinMachines.Utils
         {
             var newItem = new GenericHierarchicalTreeViewItem
             (
-                id = id++,
+                id++,
                 parentItem.depth + 1,
                 hierarchicalTreeItem.Name
             );
