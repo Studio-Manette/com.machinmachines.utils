@@ -47,20 +47,38 @@ namespace MachinMachines.Common.Repository
             ExternalOnly
         }
 
+        /// <summary>
+        /// Thread-safe accessor to the unique instance
+        /// Thread-safety is required during the (multithreaded) import pass
+        /// No double-checked locking etc. as we are not caring too much
+        /// about performance of this accessor so far
+        /// </summary>
         public static FilesRepositoryManager Instance
         {
             get
             {
-                if (_instance == null)
+                Profiler.BeginSample("FilesRepositoryManager - instance getter");
+                lock (_lock)
                 {
-                    _instance = new FilesRepositoryManager();
+                    if (_instance == null)
+                    {
+                        _instance = new FilesRepositoryManager();
+                    }
                 }
+                Profiler.EndSample();
                 return _instance;
             }
         }
-        // Mostly for debug
+
+        /// <summary>
+        /// Mostly for debug
+        /// </summary>
         public FilesRepository[] Repositories { get { return _repositories.ToArray(); } }
 
+        /// <summary>
+        /// Thread-safety required! @see Instance
+        /// </summary>
+        private static readonly object _lock = new object();
         private static FilesRepositoryManager _instance = new FilesRepositoryManager();
         private HashSet<FilesRepository> _repositories = new HashSet<FilesRepository>();
 

@@ -15,9 +15,8 @@
 using System.IO;
 using System.Reflection;
 
-using UnityEditor;
-
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace MachinMachines.Utils.Settings
 {
@@ -90,6 +89,10 @@ namespace MachinMachines.Utils.Settings
                                                                             kSubFolderName,
                                                                              $"{typeof(T).Name}.json");
 
+        /// <summary>
+        /// Thread-safety required! @see GetOrCreateSettings
+        /// </summary>
+        private static readonly object _lock = new object();
         internal static T _instance = null;
 
         /// <summary>
@@ -99,26 +102,31 @@ namespace MachinMachines.Utils.Settings
         /// </summary>
         public static T GetOrCreateSettings()
         {
-            if (_instance == null)
+            Profiler.BeginSample("SettingsBase - instance getter");
+            lock (_lock)
             {
-                _instance = ScriptableObject.CreateInstance<T>();
-                _instance._editorSettingsPath = kEditorSettingsPath;
-                _instance._runtimeSettingsPath = kRuntimeSettingsPath;
+                if (_instance == null)
+                {
+                    _instance = ScriptableObject.CreateInstance<T>();
+                    _instance._editorSettingsPath = kEditorSettingsPath;
+                    _instance._runtimeSettingsPath = kRuntimeSettingsPath;
 
-                string directory = Path.GetDirectoryName(_instance.SettingsPath);
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
+                    string directory = Path.GetDirectoryName(_instance.SettingsPath);
+                    if (!Directory.Exists(directory))
+                    {
+                        Directory.CreateDirectory(directory);
+                    }
+                    if (File.Exists(_instance.SettingsPath))
+                    {
+                        JsonUtility.FromJsonOverwrite(File.ReadAllText(_instance.SettingsPath), _instance);
+                    }
+                    // We always write the file in case the base ScriptableObject gets updated from the code
+                    // \todo @gama: decide whether the file or the code is right once and for all!
+                    SerialiseToFile();
+                    CreateFolders(_instance);
                 }
-                if (File.Exists(_instance.SettingsPath))
-                {
-                    JsonUtility.FromJsonOverwrite(File.ReadAllText(_instance.SettingsPath), _instance);
-                }
-                // We always write the file in case the base ScriptableObject gets updated from the code
-                // \todo @gama: decide whether the file or the code is right once and for all!
-                SerialiseToFile();
-                CreateFolders(_instance);
             }
+            Profiler.EndSample();
             return _instance;
         }
 
@@ -135,8 +143,11 @@ namespace MachinMachines.Utils.Settings
                 Directory.CreateDirectory(overwritePathDirectory);
             }
             File.Copy(_instance.EditorSettingsPath, _instance.OverwriteSettingsPath, true);
-            // Make sure to reset the instance
-            _instance = null;
+            lock (_lock)
+            {
+                // Make sure to reset the instance
+                _instance = null;
+            }
         }
 #endif  // UNITY_EDITOR
 
