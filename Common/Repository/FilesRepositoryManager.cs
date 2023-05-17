@@ -80,6 +80,8 @@ namespace MachinMachines.Common.Repository
         /// </summary>
         private static readonly object _lock = new object();
         private static FilesRepositoryManager _instance = new FilesRepositoryManager();
+        // Ugly reentrancy flag to check if we are currently retrieving all file repository asset files
+        private static bool _isBrowsingAssets = false;
         private HashSet<FilesRepository> _repositories = new HashSet<FilesRepository>();
 
         public IEnumerable<FilesRepository.Repository> GetRepositoriesForUsage(RepositoryUsage usage)
@@ -226,8 +228,13 @@ namespace MachinMachines.Common.Repository
         /// </summary>
         public void FindAllRepositories()
         {
+            if (_isBrowsingAssets)
+            {
+                return;
+            }
             Profiler.BeginSample("FilesRepositoryManager - FindAllRepositories");
 #if UNITY_EDITOR
+            _isBrowsingAssets = true;
             foreach (string GUID in UnityEditor.AssetDatabase.FindAssets("t:StudioManette.Bob.Repository.FilesRepository"))
             {
                 string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(GUID);
