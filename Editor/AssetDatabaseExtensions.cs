@@ -92,8 +92,8 @@ namespace MachinMachines.Utils
         {
             if (File.Exists(assetPath) || Directory.Exists(assetPath))
             {
-                string metaFilePath = assetPath + ".meta";
-                if (File.Exists(metaFilePath))
+                string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(assetPath);
+                if (!string.IsNullOrEmpty(metaFilePath))
                 {
                     using (StreamReader stream = new(metaFilePath))
                     {
@@ -116,8 +116,8 @@ namespace MachinMachines.Utils
         {
             if (File.Exists(assetPath) || Directory.Exists(assetPath))
             {
-                string metaFilePath = assetPath + ".meta";
-                if (File.Exists(metaFilePath))
+                string metaFilePath = AssetDatabase.GetTextMetaFilePathFromAssetPath(assetPath);
+                if (!string.IsNullOrEmpty(metaFilePath))
                 {
                     string[] metaContent;
                     using (StreamReader stream = new(metaFilePath))
