@@ -89,18 +89,19 @@ namespace MachinMachines.Packages
             return result.ToArray();
         }
 
-        public static string ToString(PackageDependency[] input)
+        public static string ToString(IEnumerable<PackageDependency> input)
         {
             string result = "\"dependencies\": {\n";
-            for (int i = 0; i < input.Length; ++i)
+            int i = 0;
+            foreach (var packageDependency in input)
             {
-                PackageDependency packageDependency = input[i];
                 result += $"  \"{packageDependency.packageName}\": \"{packageDependency.packageVersion}\"";
-                if (i < input.Length - 1)
+                if (i < input.Count() - 1)
                 {
                     result += ",";
                 }
                 result += "\n";
+                i += 1;
             }
             result += "}";
             return result;
@@ -122,9 +123,9 @@ namespace MachinMachines.Packages
     {
         new public string name;
         // Custom format: private, not automatically serialised
-        private string _dependenciesStr;
+        protected string _dependenciesStr;
         // Cache of the above
-        private PackageDependency[] _dependencies = null;
+        protected PackageDependency[] _dependencies = null;
 
         /// <summary>
         /// All listed dependencies
