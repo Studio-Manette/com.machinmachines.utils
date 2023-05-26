@@ -46,41 +46,27 @@ namespace MachinMachines.Utils
             return result.ToArray();
         }
 
+        /// <summary>
+        /// As its name suggests, nothing fancy here
+        /// </summary>
         public static void CreateOrReplaceAsset<T>(Object asset, string path) where T : Object
         {
-            try
+            T existingAsset = AssetDatabase.LoadAssetAtPath<T>(path);
+            if (existingAsset != null)
             {
-                AssetDatabase.StartAssetEditing();
-                T existingAsset = AssetDatabase.LoadAssetAtPath<T>(path);
-                if (existingAsset != null)
-                {
-                    EditorUtility.CopySerialized(asset, existingAsset);
-                    EditorUtility.SetDirty(existingAsset);
-                }
-                else
-                {
-                    string folderPathStr = "";
-                    string[] folderPath = path.Split(Path.DirectorySeparatorChar);
-                    bool copyItems = false;
-                    for (int i = 0; i < folderPath.Length - 1; ++i)
-                    {
-                        if (copyItems)
-                        {
-                            folderPathStr += folderPath[i];
-                            folderPathStr += Path.DirectorySeparatorChar;
-                        }
-                        if (folderPath[i] == "Assets")
-                        {
-                            copyItems = true;
-                        }
-                    }
-                    Directory.CreateDirectory(Path.Combine(Application.dataPath, folderPathStr));
-                    AssetDatabase.CreateAsset(asset, path);
-                }
+                EditorUtility.CopySerialized(asset, existingAsset);
+                EditorUtility.SetDirty(existingAsset);
             }
-            finally
+            else
             {
-                AssetDatabase.StopAssetEditing();
+                string assetParentDirectory = Path.GetDirectoryName(path);
+                if (!Directory.Exists(assetParentDirectory))
+                {
+                    string assetDirParentDirectory = Path.GetDirectoryName(assetParentDirectory);
+                    AssetDatabase.CreateFolder(assetDirParentDirectory,
+                                               assetParentDirectory.Substring(assetDirParentDirectory.Length + 1));
+                }
+                AssetDatabase.CreateAsset(asset, path);
             }
         }
 
