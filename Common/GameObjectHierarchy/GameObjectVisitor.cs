@@ -37,6 +37,23 @@ namespace MachinMachines.GameObjectHierarchy
         }
 
         /// <summary>
+        /// Recursively visit every child game object of the given root,
+        /// calling "func" for every one of them,
+        /// unless invoking "func" yields "false":
+        /// in that case there is no recursion into the children but move on to the next sibling
+        /// </summary>
+        public static void VisitAllowEarlyOut_r(GameObject root,
+                                                Func<GameObject, object, bool> func,
+                                                object payload,
+                                                bool includeRoot = true)
+        {
+            foreach (GameObject go in GameObjectHierarchyOperations.BrowseChildHierarchy(root, includeRoot))
+            {
+                func(go, payload);
+            }
+        }
+
+        /// <summary>
         /// Recursively visit every child game object of both given roots,
         /// making sure to "get down one generation" in both hierarchies at the same time
         /// if one generation has more members then the default "null" will be used

@@ -98,6 +98,26 @@ namespace MachinMachines.GameObjectHierarchy
         }
 
         /// <summary>
+        /// Variant of the above BrowseChildHierarchy(), optionally recursing into the children
+        /// </summary>
+        public static void VisitChildHierarchyWithEarlyOut_r(
+            GameObject root,
+            Func<GameObject, object, bool> func,
+            object payload = null)
+        {
+            if (func(root, payload))
+            {
+                for (int i = 0; i < root.transform.childCount; ++i)
+                {
+                    Transform childTransform = root.transform.GetChild(i);
+                    VisitChildHierarchyWithEarlyOut_r(childTransform.gameObject,
+                                                        func,
+                                                        payload);
+                }
+            }
+        }
+
+        /// <summary>
         /// Get to the root of the given leaf game object (included in the results)
         /// </summary>
         public static IEnumerable<GameObject> BrowseParentHierarchy(GameObject leaf, GameObject topObject = null)
