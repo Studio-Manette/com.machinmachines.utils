@@ -67,9 +67,21 @@ namespace MachinMachines.Common
                 Quaternion blenderRotation,
                 Vector3 blenderScale)
         {
-            existingTransform.localPosition = blenderPosition.FromBlenderToUnity();
-            existingTransform.localRotation = blenderRotation.FromBlenderToUnity();
-            existingTransform.localScale = blenderScale.ScaleFromBlenderToUnity();
+            Vector3 newPosition = blenderPosition.FromBlenderToUnity();
+            if (existingTransform.localPosition != newPosition)
+            {
+                existingTransform.localPosition = newPosition;
+            }
+            Quaternion newRotation = blenderRotation.FromBlenderToUnity();
+            if (existingTransform.localRotation != newRotation)
+            {
+                existingTransform.localRotation = newRotation;
+            }
+            Vector3 newScale = blenderScale.ScaleFromBlenderToUnity();
+            if (existingTransform.localScale != newScale)
+            {
+                existingTransform.localScale = newScale;
+            }
         }
     }
 }
