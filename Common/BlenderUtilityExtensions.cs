@@ -61,27 +61,33 @@ namespace MachinMachines.Common
         /// <summary>
         /// Apply the input PRS data to the given transform
         /// </summary>
-        public static void FromBlenderToUnity(
+        /// <returns>True if anything got changed in the given transform, false otherwise</returns>
+        public static bool FromBlenderToUnity(
                 this Transform existingTransform,
                 Vector3 blenderPosition,
                 Quaternion blenderRotation,
                 Vector3 blenderScale)
         {
+            bool wasModified = false;
             Vector3 newPosition = blenderPosition.FromBlenderToUnity();
             if (existingTransform.localPosition != newPosition)
             {
                 existingTransform.localPosition = newPosition;
+                wasModified = true;
             }
             Quaternion newRotation = blenderRotation.FromBlenderToUnity();
             if (existingTransform.localRotation != newRotation)
             {
                 existingTransform.localRotation = newRotation;
+                wasModified = true;
             }
             Vector3 newScale = blenderScale.ScaleFromBlenderToUnity();
             if (existingTransform.localScale != newScale)
             {
                 existingTransform.localScale = newScale;
+                wasModified = true;
             }
+            return wasModified;
         }
     }
 }
