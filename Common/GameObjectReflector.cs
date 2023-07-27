@@ -20,6 +20,8 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Profiling;
 
+using MachinMachines.GameObjectHierarchy;
+
 namespace MachinMachines.Utils
 {
     public static class GameObjectReflector
