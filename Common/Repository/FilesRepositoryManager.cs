@@ -235,6 +235,7 @@ namespace MachinMachines.Common.Repository
             Profiler.BeginSample("FilesRepositoryManager - FindAllRepositories");
 #if UNITY_EDITOR
             _isBrowsingAssets = true;
+            _repositories.Clear();
             foreach (string GUID in UnityEditor.AssetDatabase.FindAssets("t:StudioManette.Bob.Repository.FilesRepository"))
             {
                 string assetPath = UnityEditor.AssetDatabase.GUIDToAssetPath(GUID);
